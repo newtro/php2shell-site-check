@@ -19,7 +19,7 @@ PHP2Shell Site Check tells you when the site you're on looks unpatched:
 • "PHP" badge: the site runs PHP but hides its version.
 • Green "ok" badge: the reported version includes the fix.
 
-On red and orange sites you get a one-time warning when you start typing into a password or card-number field. The popup shows exactly which headers led to the verdict.
+On red and orange sites you get a one-time warning when a password or payment-related field receives focus. The popup shows exactly which headers led to the verdict.
 
 How it works: the extension only reads the response headers your browser already receives. It never sends requests of its own and never probes servers. It processes page addresses, response-header evidence, and sensitive-field focus only on your device to provide the check. It never reads typed form values or transmits this data to the developer or third parties. Tab evidence stays in browser session memory until the tab closes or the browser exits. It makes no network connections of its own. Many sites hide their PHP version, so treat the result as a hint, not proof.
 

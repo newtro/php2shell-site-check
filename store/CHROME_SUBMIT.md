@@ -1,6 +1,10 @@
 # Chrome Web Store submission, step by step
 
-Everything to paste is in a code block below, so you never have to leave this page.
+Submitted on 22 October 2026. Dashboard readback: **Pending review**; "This draft is pending review." Automatic publication after approval is enabled. Version 1.0.0 was accepted without a version bump. Item ID: `kkpgampikonaiekpmoabbmffnkbbplaj`.
+
+Dashboard: https://chrome.google.com/webstore/devconsole/45d26504-9417-4312-94aa-12f7e8ed76a1/kkpgampikonaiekpmoabbmffnkbbplaj/edit/status
+
+The instructions below are retained for reference; do not submit a duplicate.
 Files are in `/Volumes/Cache/repos/SecurityAudit`.
 
 ## 0. Open the dashboard
@@ -24,7 +28,7 @@ PHP2Shell Site Check tells you when the site you're on looks unpatched:
 • "PHP" badge: the site runs PHP but hides its version.
 • Green "ok" badge: the reported version includes the fix.
 
-On red and orange sites you get a one-time warning when you start typing into a password or card-number field. The popup shows exactly which headers led to the verdict.
+On red and orange sites you get a one-time warning when a password or payment-related field receives focus. The popup shows exactly which headers led to the verdict.
 
 How it works: the extension only reads the response headers your browser already receives. It never sends requests of its own and never probes servers. It processes page addresses, response-header evidence, and sensitive-field focus only on your device to provide the check. It never reads typed form values or transmits this data to the developer or third parties. Tab evidence stays in browser session memory until the tab closes or the browser exits. It makes no network connections of its own. Many sites hide their PHP version, so treat the result as a hint, not proof.
 

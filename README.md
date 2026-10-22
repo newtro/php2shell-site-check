@@ -19,7 +19,7 @@ PHP2Shell is a pair of flaws in the PHP interpreter itself, disclosed on 21 Octo
   | **ok** green | The reported version includes the fix. |
   | none | No sign of PHP. |
 
-- On red and orange sites, shows a one-time banner when you start typing into a password or card-number field.
+- On red and orange sites, shows a one-time banner when a password or payment-related field receives focus.
 - The popup lists exactly which headers led to the verdict.
 
 ## What it does not do
@@ -38,7 +38,7 @@ Treat the badge as a hint, not proof. If you run a PHP site, patch it: [CISA ale
 
 ## Install
 
-- Chrome Web Store: submission being prepared (item ID `kkpgampikonaiekpmoabbmffnkbbplaj`)
+- Chrome Web Store: [PHP2Shell Site Check](https://chromewebstore.google.com/detail/php2shell-site-check/kkpgampikonaiekpmoabbmffnkbbplaj) — submitted 22 October 2026, pending review; available after approval.
 - Firefox Add-ons: [addons.mozilla.org/firefox/addon/php2shell-site-check](https://addons.mozilla.org/firefox/addon/php2shell-site-check/) (in review)
 - From source: `npm run build`, then load `dist/chrome` via `chrome://extensions` (Developer mode → Load unpacked), or `dist/firefox/manifest.json` via `about:debugging` → This Firefox → Load Temporary Add-on.
 
