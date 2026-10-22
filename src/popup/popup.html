@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>PHP2Shell Site Check</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header id="head" class="level-none">
+    <div id="label">Checking…</div>
+    <div id="site"></div>
+  </header>
+  <main>
+    <p id="reason"></p>
+    <button id="grant" hidden>Allow access to all sites</button>
+    <section id="evidence-wrap" hidden>
+      <h2>What the server sent</h2>
+      <ul id="evidence"></ul>
+    </section>
+    <details>
+      <summary>About this check</summary>
+      <p>PHP2Shell (CVE-2026-109618 and CVE-2026-109619) lets an attacker run code on a PHP web server with a single request. Fixed in PHP 8.5.12, 8.4.27, 8.3.36 and 8.2.35. Older branches have no fix.</p>
+      <p>This extension only reads the headers your browser already receives. It never probes servers. Most well-run sites hide their PHP version, and Linux distributions (including Red Hat-family servers, which can't always be recognized) often patch without changing it, so treat the result as a hint, not proof. A compromised page can hide the in-page warning; the toolbar badge can't be touched by the page.</p>
+      <p><a href="https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching" target="_blank" rel="noopener">CISA alert</a> · <a href="https://www.wiz.io/blog/php2shell-php-rce" target="_blank" rel="noopener">Wiz research</a> · <a href="https://github.com/newtro/php2shell-site-check" target="_blank" rel="noopener">Source code</a></p>
+    </details>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

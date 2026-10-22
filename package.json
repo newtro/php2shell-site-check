@@ -1,0 +1,19 @@
+{
+  "name": "php2shell-site-check",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Browser extension that warns when a site's server reports a PHP version vulnerable to PHP2Shell.",
+  "license": "MIT",
+  "scripts": {
+    "icons": "node scripts/icons.js",
+    "build": "node scripts/build.js",
+    "test": "node --test test/*.test.js",
+    "e2e": "node test/e2e.js",
+    "e2e:firefox": "node test/e2e-firefox.js",
+    "screenshots": "node scripts/screenshots.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.1",
+    "selenium-webdriver": "^4.51.0"
+  }
+}
