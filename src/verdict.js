@@ -10,12 +10,14 @@
   const NEWEST_KNOWN = [8, 5];
 
   const DISTRO_RE = /ubuntu|debian|deb\d|red ?hat|rhel|centos|rocky|almalinux|fedora|suse|amazon|\bel\d/i;
-  // Ubuntu's PHP always carries a version suffix (8.1.2-1ubuntu2.22), so a bare
-  // PHP version behind an "(Ubuntu)" web server is something else, such as the
-  // official Docker image behind a host's nginx. Other distros report bare versions.
-  const SERVER_DISTRO_RE = /debian|red ?hat|rhel|centos|rocky|almalinux|fedora|suse|amazon/i;
+  // Ubuntu and Debian packages always carry a version suffix (8.1.2-1ubuntu2.22,
+  // 8.2.29-1~deb12u1), so a bare PHP version behind an "(Ubuntu)" or "(Debian)"
+  // web server is something else, such as the official Docker image (Debian
+  // based, built from upstream). Red Hat-family packages report bare versions.
+  const SERVER_DISTRO_RE = /red ?hat|rhel|centos|rocky|almalinux|fedora|suse|amazon/i;
   // Third-party repos that ship upstream releases unchanged rather than backports.
-  const UPSTREAM_REPACK_RE = /sury|remi/i;
+  // Sury's Debian builds look like 8.3.14-1+0~20241128.48+debian12~1.gbp3d6ba8.
+  const UPSTREAM_REPACK_RE = /sury|remi|\+0~\d{8}\.\d+\+/i;
   const PHP_TOKEN_RE = /\bPHP(?![a-z])(?:\/(\d+)\.(\d+)(?:\.(\d+))?([^\s,;()]*))?/i;
 
   const SEVERITY = { none: 0, patched: 1, unknown: 2, maybe: 3, vulnerable: 4 };
@@ -72,6 +74,10 @@
     return found;
   }
 
+  // A page can make thousands of requests; storage.session is shared by all
+  // tabs, so evidence per page is capped.
+  const MAX_ITEMS = 10;
+
   // Folds one response's evidence into the accumulated evidence for a page.
   function mergeEvidence(acc, next) {
     const out = acc
@@ -81,6 +87,18 @@
     for (const v of next.versions) if (!seen.has(`${v.source}|${v.raw}|${v.distro}`)) out.versions.push(v);
     for (const s of next.signals) if (!out.signals.includes(s)) out.signals.push(s);
     for (const s of next.distroHints) if (!out.distroHints.includes(s)) out.distroHints.push(s);
+    if (out.versions.length > MAX_ITEMS) {
+      // Keep the worst versions so the cap never hides a vulnerable one.
+      const rank = (v) => SEVERITY[classifyVersion(v).level];
+      out.versions = out.versions
+        .map((v, i) => [v, i])
+        .sort((a, b) => rank(b[0]) - rank(a[0]) || a[1] - b[1])
+        .slice(0, MAX_ITEMS)
+        .sort((a, b) => a[1] - b[1])
+        .map(([v]) => v);
+    }
+    out.signals = out.signals.slice(0, MAX_ITEMS);
+    out.distroHints = out.distroHints.slice(0, MAX_ITEMS);
     return out;
   }
 

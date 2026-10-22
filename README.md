@@ -32,7 +32,7 @@ PHP2Shell is a pair of flaws in the PHP interpreter itself, disclosed on 21 Octo
 - Most well-run sites hide their PHP version, so they show as "PHP, version hidden".
 - Distribution builds may be patched under an old version number (the orange "?").
 - A server can lie in its headers, and a CDN or proxy can strip or rewrite them.
-- Pages served entirely from a service worker or the browser's cache may carry no fresh headers.
+- Pages served entirely by a service worker carry no headers the extension can see. In a tab that already visited the site, the last verdict for that site is reused. Prerendered pages that are activated rely on the in-page script reporting the switch; this path is not covered by automated tests.
 
 Treat the badge as a hint, not proof. If you run a PHP site, patch it: [CISA alert](https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching).
 

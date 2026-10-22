@@ -114,8 +114,8 @@ function serve() {
     await page.goto(`http://127.0.0.1:${port}/prerender`);
     await page.waitForTimeout(1500);
     b = await badge();
-    if (requested.includes("/vuln?pre")) check("prerender doesn't leak", b === "", `badge=${JSON.stringify(b)}`);
-    else console.log("INFO prerender not exercised: this Chromium didn't prerender");
+    // Headless Chromium may only prefetch here, so this can pass vacuously.
+    console.log(`INFO speculation rules page badge=${JSON.stringify(b)} (not proof of prerender handling)`);
 
     // Evidence that arrives late still triggers the banner on a later focus.
     await page.goto(`http://127.0.0.1:${port}/slow`);

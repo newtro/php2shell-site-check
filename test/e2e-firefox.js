@@ -35,7 +35,11 @@ const ROUTES = {
   try {
     await driver.installAddon(xpi, true);
     await driver.sleep(1000);
-    for (const [p, want] of [["/vuln", true], ["/patched", false], ["/ubuntu", true], ["/none", false]]) {
+    // Same-origin patched -> vulnerable, repeated: Firefox often reports the
+    // commit before the response, which used to leave a stale verdict.
+    const seq = [["/vuln", true], ["/patched", false], ["/ubuntu", true], ["/none", false]];
+    for (let r = 0; r < 3; r++) seq.push(["/patched", false], ["/vuln", true]);
+    for (const [p, want] of seq) {
       await driver.get(`http://127.0.0.1:${port}${p}`);
       await driver.sleep(500);
       await driver.findElement(By.id("pw")).click();

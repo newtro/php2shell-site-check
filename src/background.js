@@ -21,6 +21,9 @@ const BADGE = {
 //   pending:<id> top-level responses not yet committed, newest last. A response
 //                only becomes the tab's state when its navigation commits, so
 //                prerenders, downloads and 204s never replace the visible page.
+//   await:<id>   a committed URL whose response hasn't arrived yet. Firefox
+//                often reports the commit before the response, so the pairing
+//                must work in either order.
 //   seen:<id>    last state per origin, to restore pages from the back/forward
 //                cache, which commit without a network response.
 const PENDING_MAX = 8;
@@ -93,6 +96,7 @@ function onResponse(details) {
       const pending = await get("pending", details.tabId, []);
       pending.push({ url: noHash(details.url), evidence: mergeEvidence(null, found) });
       await put("pending", details.tabId, pending.slice(-PENDING_MAX));
+      if ((await get("await", details.tabId, null)) === noHash(details.url)) await promote(details.tabId, details.url);
     });
     return;
   }
@@ -130,13 +134,16 @@ async function promote(tabId, url) {
   let state;
   if (i >= 0) {
     const evidence = pending[i].evidence;
-    state = { origin, evidence, verdict: classify(evidence), at: Date.now() };
+    state = { url: target, origin, evidence, verdict: classify(evidence), at: Date.now() };
     await put("pending", tabId, pending.slice(i + 1));
+    await put("await", tabId, null);
   } else {
+    // The response may still be on its way (Firefox); claim it when it lands.
+    await put("await", tabId, target);
     // Committed without a response we saw: back/forward cache, service
     // worker, or a same-document load. Fall back to what we knew of the origin.
     const seen = await get("seen", tabId, {});
-    state = seen[origin] || null;
+    state = seen[origin] ? { ...seen[origin], url: target } : null;
   }
   await setState(tabId, state);
 }
@@ -150,7 +157,7 @@ chrome.webNavigation.onCommitted.addListener((d) => {
 });
 
 chrome.tabs.onRemoved.addListener((tabId) => {
-  serialize(tabId, () => chrome.storage.session.remove(["tab", "pending", "seen"].map((kind) => k(kind, tabId))));
+  serialize(tabId, () => chrome.storage.session.remove(["tab", "pending", "seen", "await"].map((kind) => k(kind, tabId))));
 });
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -160,7 +167,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     const tabId = sender.tab.id;
     serialize(tabId, async () => {
       const state = await get("tab", tabId, null);
-      if (!state || state.origin !== originOf(sender.url)) await promote(tabId, sender.url);
+      if (!state || state.url !== noHash(sender.url)) await promote(tabId, sender.url);
     });
     return false;
   }
