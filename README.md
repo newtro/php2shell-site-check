@@ -2,7 +2,7 @@
 
 A browser extension for Chrome and Firefox that warns you when a website's server reports a PHP version vulnerable to **PHP2Shell** (CVE-2026-109618 and CVE-2026-109619).
 
-PHP2Shell is a pair of flaws in the PHP interpreter itself, disclosed on 21 October 2026. One unauthenticated request can let an attacker run code on the web server before any of the site's own code runs. A compromised server can leak what visitors type into it (passwords, card numbers, session tokens) and can serve them malware. Fixed releases are **8.5.12, 8.4.27, 8.3.36 and 8.2.35**. Every branch older than 8.2 is end-of-life and has no fix.
+PHP2Shell is a pair of flaws in the PHP interpreter itself, disclosed on 21 October 2026. These flaws can allow unauthenticated remote code execution on affected PHP deployments. A compromised server can leak what visitors type into it (passwords, card numbers, session tokens) and can serve them malware. Fixed releases are **8.5.12, 8.4.27, 8.3.36 and 8.2.35**. Every branch older than 8.2 is end-of-life and has no fix.
 
 ![Warning on a vulnerable site](store/screenshot-vulnerable.png)
 
@@ -25,7 +25,7 @@ PHP2Shell is a pair of flaws in the PHP interpreter itself, disclosed on 21 Octo
 ## What it does not do
 
 - **It never sends a request of its own.** It does not probe or scan servers. Testing whether someone else's server is exploitable would mean attacking it.
-- It collects nothing and sends nothing anywhere. All state lives in the browser's session storage and is cleared when the tab closes. See [PRIVACY.md](PRIVACY.md).
+- It processes page addresses, selected response-header evidence, and sensitive-field focus locally to provide the badge and warning. It never reads typed form values or sends this data to the developer or third parties. Tab state stays in the browser's in-memory session storage and is cleared when the tab closes or the browser exits. See [PRIVACY.md](PRIVACY.md).
 
 ## Limits, honestly
 
@@ -38,7 +38,7 @@ Treat the badge as a hint, not proof. If you run a PHP site, patch it: [CISA ale
 
 ## Install
 
-- Chrome Web Store: *pending review*
+- Chrome Web Store: submission being prepared (item ID `kkpgampikonaiekpmoabbmffnkbbplaj`)
 - Firefox Add-ons: [addons.mozilla.org/firefox/addon/php2shell-site-check](https://addons.mozilla.org/firefox/addon/php2shell-site-check/) (in review)
 - From source: `npm run build`, then load `dist/chrome` via `chrome://extensions` (Developer mode → Load unpacked), or `dist/firefox/manifest.json` via `about:debugging` → This Firefox → Load Temporary Add-on.
 
