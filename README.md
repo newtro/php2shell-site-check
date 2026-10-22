@@ -39,7 +39,7 @@ Treat the badge as a hint, not proof. If you run a PHP site, patch it: [CISA ale
 ## Install
 
 - Chrome Web Store: *pending review*
-- Firefox Add-ons: *pending review*
+- Firefox Add-ons: [addons.mozilla.org/firefox/addon/php2shell-site-check](https://addons.mozilla.org/firefox/addon/php2shell-site-check/) (in review)
 - From source: `npm run build`, then load `dist/chrome` via `chrome://extensions` (Developer mode → Load unpacked), or `dist/firefox/manifest.json` via `about:debugging` → This Firefox → Load Temporary Add-on.
 
 ## Develop
